@@ -358,7 +358,7 @@ function PostCard({ post, onDelete, openUserProfile }) {
   const isOwner = post.user_id === user?.id;
 
   return (
-    <div className="card" style={{ animation: "fadeUp 0.35s ease" }}>
+    <div className="post-card" style={{ animation: "fadeUp 0.35s ease" }}>
       {/* Header */}
       <div
         style={{
@@ -520,38 +520,21 @@ function PostCard({ post, onDelete, openUserProfile }) {
       )}
 
       {(reactionTotal > 0 || commentCount > 0) && (
-        <div
-          style={{
-            padding: "0 20px 8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            color: "var(--ink-soft)",
-            fontSize: 13,
-            marginTop: 4,
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div className="post-actions">
+          <div className="reaction-pill">
             {topReactions.slice(0, 3).map((reaction) => (
               <span key={reaction.key}>{reaction.emoji}</span>
             ))}
             {reactionTotal > 0 ? (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                <span style={{ color: "var(--rose)" }}>💖</span>
+              <span>
+                <span>💖</span>
                 <span>{reactionTotal} cảm xúc</span>
               </span>
             ) : (
               <span>Chưa có cảm xúc</span>
             )}
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div className="comment-pill">
             <span>💬</span>
             <span>{commentCount} bình luận</span>
           </div>
@@ -896,245 +879,117 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   };
 
   return (
-    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "24px 20px" }}>
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 34, color: "var(--rose)", marginBottom: 8 }}>
-          Trang chủ
-        </h1>
-        <p
-          style={{
-            color: "var(--ink-soft)",
-            fontSize: 15,
-            maxWidth: 680,
-            lineHeight: 1.8,
-          }}
-        >
+    <div className="page-shell">
+      <div className="page-header">
+        <h1>Trang chủ</h1>
+        <p>
           Đọc tin, chia sẻ cảm xúc và kết nối nhanh với người phù hợp. Aura giúp
           bạn hiển thị cảm xúc rõ ràng và tương tác theo cách mềm mại, thân
           thiện.
         </p>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-          gap: 14,
-          marginBottom: 22,
-        }}
-      >
-        <div
-          className="card"
-          style={{
-            padding: 18,
-            borderRadius: 22,
-            background:
-              "linear-gradient(135deg, var(--rose-pale), var(--cream))",
-            border: "1px solid rgba(232, 54, 74, 0.12)",
-          }}
-        >
-          <div
-            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
-          >
+      <div className="stats-grid">
+        <div className="stats-card">
+          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
             Tổng số bài viết
           </div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
-            {posts.length}
-          </div>
+          <strong>{posts.length}</strong>
         </div>
 
-        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div
-            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
-          >
+        <div className="stats-card">
+          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
             Cảm xúc hiện tại
           </div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
-            {totalReactions}
-          </div>
-          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
-            Tổng tương tác từ các bài viết
-          </div>
+          <strong>{totalReactions}</strong>
+          <div className="stats-note">Tổng tương tác từ các bài viết</div>
         </div>
 
-        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div
-            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
-          >
+        <div className="stats-card">
+          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
             Bình luận
           </div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
-            {totalComments}
-          </div>
-          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
-            Đếm bình luận trong feed hiện tại
-          </div>
+          <strong>{totalComments}</strong>
+          <div className="stats-note">Đếm bình luận trong feed hiện tại</div>
         </div>
 
-        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div
-            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
-          >
+        <div className="stats-card">
+          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
             Bạn bè online
           </div>
-          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
-            {matchesLoading ? "..." : activeMatches}
-          </div>
-          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
-            Sẵn sàng để chat ngay
-          </div>
+          <strong>{matchesLoading ? "..." : activeMatches}</strong>
+          <div className="stats-note">Sẵn sàng để chat ngay</div>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
-        <div style={{ flex: "1 1 560px", minWidth: 320, maxWidth: 760 }}>
-          <div
-            style={{
-              overflowX: "auto",
-              display: "flex",
-              gap: 12,
-              paddingBottom: 12,
-              marginBottom: 20,
-            }}
-          >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1.9fr 0.95fr",
+          gap: 18,
+          alignItems: "start",
+        }}
+      >
+        <div>
+          <div className="stories-scroll">
             <button
               type="button"
-              className="btn btn-secondary"
+              className="story-pill add"
               onClick={scrollToCreatePost}
-              style={{
-                minWidth: 88,
-                height: 102,
-                borderRadius: 22,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 8,
-                whiteSpace: "nowrap",
-              }}
             >
               <div
                 style={{
                   width: 44,
                   height: 44,
                   borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: "var(--rose-pale)",
+                  display: "grid",
+                  placeItems: "center",
+                  background: "rgba(95, 133, 219, 0.14)",
                   color: "var(--rose)",
                   fontSize: 24,
                 }}
               >
                 +
               </div>
-              <span
-                style={{ fontSize: 12, color: "var(--ink)", fontWeight: 700 }}
-              >
-                Thêm tin
-              </span>
+              <span>Thêm tin</span>
             </button>
             {matches.slice(0, 5).map((m) => (
               <button
                 key={m.id}
                 type="button"
+                className="story-pill"
                 onClick={() => openMatchChat(m)}
                 title={`Chat với ${m.user2_username}`}
-                style={{
-                  minWidth: 88,
-                  height: 102,
-                  borderRadius: 22,
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 10,
-                  gap: 8,
-                  cursor: "pointer",
-                  textAlign: "center",
-                }}
               >
-                <div
-                  style={{
-                    position: "relative",
-                    width: 52,
-                    height: 52,
-                    borderRadius: "50%",
-                    overflow: "hidden",
-                    border: "2px solid var(--rose)",
-                  }}
-                >
+                <div className="story-avatar">
                   <AvatarImg
                     src={m.user2_avatar_url}
                     name={m.user2_username}
-                    size={52}
+                    size={44}
                   />
-                  {m.partner_is_online && (
-                    <span
-                      style={{
-                        position: "absolute",
-                        bottom: 2,
-                        right: 2,
-                        width: 10,
-                        height: 10,
-                        borderRadius: "50%",
-                        background: "#22c55e",
-                        border: "2px solid white",
-                      }}
-                    />
-                  )}
                 </div>
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: "var(--ink)",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                    width: 72,
-                  }}
-                >
-                  {m.user2_username}
-                </span>
+                <span>{m.user2_username}</span>
               </button>
             ))}
           </div>
 
-          <div className="card" style={{ padding: 20, marginBottom: 20 }}>
+          <div className="hero-panel">
             <div
               style={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 14,
+                gap: 16,
                 flexWrap: "wrap",
+                alignItems: "center",
               }}
             >
               <div style={{ minWidth: 0, flex: 1 }}>
-                <div
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 700,
-                    color: "var(--rose)",
-                    marginBottom: 8,
-                  }}
-                >
-                  Đăng tin nhanh
-                </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 14 }}
-                >
+                <h2>Đăng tin nhanh</h2>
+                <p>
                   Chia sẻ trạng thái, ảnh hoặc video để mọi người kết nối cùng
                   bạn.
                 </p>
               </div>
-              <button
-                className="btn btn-primary"
-                onClick={scrollToCreatePost}
-                style={{ whiteSpace: "nowrap" }}
-              >
+              <button className="btn btn-primary" onClick={scrollToCreatePost}>
                 Đăng tin ngay
               </button>
             </div>
@@ -1146,43 +1001,19 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         </div>
 
         <aside
-          style={{
-            flex: "0 0 300px",
-            minWidth: 280,
-            maxWidth: 320,
-            alignSelf: "flex-start",
-          }}
+          style={{ minWidth: 280, maxWidth: 320, alignSelf: "flex-start" }}
         >
-          <div className="card" style={{ padding: 20 }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                flexWrap: "wrap",
-                marginBottom: 16,
-              }}
-            >
+          <div className="sidebar-panel">
+            <div className="sidebar-header">
               <div>
-                <div style={{ fontSize: 16, fontWeight: 700 }}>
-                  Bạn bè đang hoạt động
-                </div>
+                <h3>Bạn bè đang hoạt động</h3>
                 <p
                   style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
                 >
                   Nhấn vào để chat ngay.
                 </p>
               </div>
-              <span
-                style={{
-                  fontSize: 12,
-                  color: "var(--ink-soft)",
-                  padding: "4px 10px",
-                  borderRadius: 999,
-                  background: "var(--surface-container)",
-                }}
-              >
+              <span className="sidebar-tag">
                 {matchesLoading
                   ? "..."
                   : `${matches.filter((item) => item.partner_is_online).length} online`}
@@ -1209,18 +1040,7 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                   <button
                     key={m.id}
                     onClick={() => openMatchChat(m)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 12,
-                      width: "100%",
-                      padding: "12px 14px",
-                      borderRadius: 16,
-                      background: "var(--surface)",
-                      border: "1px solid var(--border)",
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
+                    className="friend-chip"
                   >
                     <div style={{ position: "relative" }}>
                       <AvatarImg
@@ -1277,7 +1097,7 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        background: "rgba(226, 88, 121, 0.14)",
+                        background: "rgba(245, 180, 81, 0.18)",
                       }}
                     >
                       <span style={{ color: "var(--rose)", fontSize: 16 }}>
@@ -1288,6 +1108,15 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 ))}
               </div>
             )}
+
+            <div className="promo-card">
+              <h3>Khám phá mọi kết nối</h3>
+              <p>
+                Những người ghép cặp với bạn đang chờ tin nhắn. Khám phá ngay để
+                mở rộng vòng tròn bạn bè.
+              </p>
+              <button className="btn btn-primary">Khám phá ngay</button>
+            </div>
           </div>
         </aside>
       </div>
