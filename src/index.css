@@ -489,6 +489,134 @@ textarea.input-field {
   color: #fff;
 }
 
+.feed-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+}
+
+.feed-toast {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+.welcome-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(75, 105, 191, 0.12);
+  box-shadow: var(--shadow-sm);
+  color: var(--ink-mid);
+  font-size: 14px;
+}
+
+.feed-intro {
+  margin-bottom: 24px;
+}
+
+.feed-intro h1 {
+  margin: 0;
+  font-size: 36px;
+  color: var(--ink);
+}
+
+.feed-intro p {
+  margin: 0;
+  max-width: 720px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+}
+
+.stories-row {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+}
+
+.stories-row::-webkit-scrollbar {
+  display: none;
+}
+
+.story-card {
+  flex: 0 0 auto;
+  min-width: 108px;
+  padding: 18px 14px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  color: var(--ink);
+}
+
+.story-card-add {
+  background: linear-gradient(180deg, rgba(95, 133, 219, 0.12), rgba(255, 255, 255, 0.96));
+  border-color: rgba(95, 133, 219, 0.2);
+}
+
+.story-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(75, 105, 191, 0.12);
+}
+
+.story-avatar-add {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(95, 133, 219, 0.18);
+  color: var(--rose);
+  font-size: 24px;
+}
+
+.create-post-card {
+  margin-bottom: 26px;
+}
+
+.feed-list {
+  display: grid;
+  gap: 20px;
+}
+
+.feed-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 40px 24px;
+  background: var(--surface);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  text-align: center;
+}
+
+.feed-empty-emoji {
+  font-size: 48px;
+}
+
+.load-more-wrap {
+  text-align: center;
+  padding: 16px;
+}
+
 .btn-primary:hover:not(:disabled) {
   background: var(--rose-light);
   transform: translateY(-1px);

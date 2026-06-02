@@ -879,286 +879,81 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   };
 
   return (
-    <div className="page-shell">
-      <div className="page-header">
+    <div className="feed-page">
+      <div className="feed-toast">
+        <div className="welcome-badge">
+          <span>✓</span>
+          <span>Chào mừng trở lại! 💕</span>
+        </div>
+      </div>
+
+      <div className="feed-intro">
         <h1>Trang chủ</h1>
-        <p>
-          Đọc tin, chia sẻ cảm xúc và kết nối nhanh với người phù hợp. Aura giúp
-          bạn hiển thị cảm xúc rõ ràng và tương tác theo cách mềm mại, thân
-          thiện.
-        </p>
+        <p>Khám phá câu chuyện của mọi người và chia sẻ cảm xúc của bạn ngay hôm nay.</p>
       </div>
 
-      <div className="stats-grid">
-        <div className="stats-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
-            Tổng số bài viết
-          </div>
-          <strong>{posts.length}</strong>
-        </div>
-
-        <div className="stats-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
-            Cảm xúc hiện tại
-          </div>
-          <strong>{totalReactions}</strong>
-          <div className="stats-note">Tổng tương tác từ các bài viết</div>
-        </div>
-
-        <div className="stats-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
-            Bình luận
-          </div>
-          <strong>{totalComments}</strong>
-          <div className="stats-note">Đếm bình luận trong feed hiện tại</div>
-        </div>
-
-        <div className="stats-card">
-          <div style={{ fontSize: 13, color: "var(--ink-soft)" }}>
-            Bạn bè online
-          </div>
-          <strong>{matchesLoading ? "..." : activeMatches}</strong>
-          <div className="stats-note">Sẵn sàng để chat ngay</div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.9fr 0.95fr",
-          gap: 18,
-          alignItems: "start",
-        }}
-      >
-        <div>
-          <div className="stories-scroll">
-            <button
-              type="button"
-              className="story-pill add"
-              onClick={scrollToCreatePost}
-            >
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: "50%",
-                  display: "grid",
-                  placeItems: "center",
-                  background: "rgba(95, 133, 219, 0.14)",
-                  color: "var(--rose)",
-                  fontSize: 24,
-                }}
-              >
-                +
-              </div>
-              <span>Thêm tin</span>
-            </button>
-            {matches.slice(0, 5).map((m) => (
-              <button
-                key={m.id}
-                type="button"
-                className="story-pill"
-                onClick={() => openMatchChat(m)}
-                title={`Chat với ${m.user2_username}`}
-              >
-                <div className="story-avatar">
-                  <AvatarImg
-                    src={m.user2_avatar_url}
-                    name={m.user2_username}
-                    size={44}
-                  />
-                </div>
-                <span>{m.user2_username}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="hero-panel">
-            <div
-              style={{
-                display: "flex",
-                gap: 16,
-                flexWrap: "wrap",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <h2>Đăng tin nhanh</h2>
-                <p>
-                  Chia sẻ trạng thái, ảnh hoặc video để mọi người kết nối cùng
-                  bạn.
-                </p>
-              </div>
-              <button className="btn btn-primary" onClick={scrollToCreatePost}>
-                Đăng tin ngay
-              </button>
-            </div>
-          </div>
-
-          <div ref={postSectionRef}>
-            <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
-          </div>
-        </div>
-
-        <aside
-          style={{ minWidth: 280, maxWidth: 320, alignSelf: "flex-start" }}
+      <div className="stories-row">
+        <button
+          type="button"
+          className="story-card story-card-add"
+          onClick={scrollToCreatePost}
         >
-          <div className="sidebar-panel">
-            <div className="sidebar-header">
-              <div>
-                <h3>Bạn bè đang hoạt động</h3>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Nhấn vào để chat ngay.
-                </p>
-              </div>
-              <span className="sidebar-tag">
-                {matchesLoading
-                  ? "..."
-                  : `${matches.filter((item) => item.partner_is_online).length} online`}
-              </span>
+          <div className="story-avatar story-avatar-add">+</div>
+          <span>Thêm tin</span>
+        </button>
+        {matches.slice(0, 5).map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            className="story-card"
+            onClick={() => openMatchChat(m)}
+            title={`Chat với ${m.user2_username}`}
+          >
+            <div className="story-avatar">
+              <AvatarImg
+                src={m.user2_avatar_url}
+                name={m.user2_username}
+                size={44}
+              />
             </div>
-
-            {matchesLoading ? (
-              <div className="page-loader" style={{ padding: 18 }}>
-                <span className="spinner" />
-              </div>
-            ) : matches.length === 0 ? (
-              <div
-                className="empty-state"
-                style={{ padding: 18, borderRadius: 16 }}
-              >
-                <div style={{ fontSize: 22, marginBottom: 8 }}>💔</div>
-                <p style={{ margin: 0, color: "var(--ink-soft)" }}>
-                  Chưa có ai ghép đôi. Hãy đăng bài và tương tác ngay.
-                </p>
-              </div>
-            ) : (
-              <div style={{ display: "grid", gap: 12 }}>
-                {matches.slice(0, 6).map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => openMatchChat(m)}
-                    className="friend-chip"
-                  >
-                    <div style={{ position: "relative" }}>
-                      <AvatarImg
-                        src={m.user2_avatar_url}
-                        name={m.user2_username}
-                        size={40}
-                      />
-                      {m.partner_is_online && (
-                        <div
-                          style={{
-                            position: "absolute",
-                            bottom: 0,
-                            right: 0,
-                            width: 10,
-                            height: 10,
-                            borderRadius: "50%",
-                            background: "#22c55e",
-                            border: "2px solid var(--surface)",
-                          }}
-                        />
-                      )}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 700,
-                          marginBottom: 4,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {m.user2_username}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: "var(--ink-soft)",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {m.user2_bio ||
-                          (m.partner_is_online ? "Trực tuyến" : "Ngoại tuyến")}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 12,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        background: "rgba(245, 180, 81, 0.18)",
-                      }}
-                    >
-                      <span style={{ color: "var(--rose)", fontSize: 16 }}>
-                        💬
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <div className="promo-card">
-              <h3>Khám phá mọi kết nối</h3>
-              <p>
-                Những người ghép cặp với bạn đang chờ tin nhắn. Khám phá ngay để
-                mở rộng vòng tròn bạn bè.
-              </p>
-              <button className="btn btn-primary">Khám phá ngay</button>
-            </div>
-          </div>
-        </aside>
+            <span>{m.user2_username}</span>
+          </button>
+        ))}
       </div>
+
+      <section className="create-post-card" ref={postSectionRef}>
+        <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
+      </section>
 
       {loading ? (
         <div className="page-loader">
           <span className="spinner" />
         </div>
       ) : posts.length === 0 ? (
-        <div className="empty-state">
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🌸</div>
+        <div className="feed-empty-state">
+          <div className="feed-empty-emoji">🌸</div>
           <h3>Chưa có bài viết nào</h3>
           <p>Hãy là người đầu tiên chia sẻ cảm xúc của bạn!</p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        <div className="feed-list">
           {posts.map((p, i) => (
-            <div
-              key={p.id}
-              style={{ animationDelay: `${Math.min(i, 5) * 0.05}s` }}
-            >
+            <div key={p.id} style={{ animationDelay: `${Math.min(i, 5) * 0.05}s` }}>
               <PostCard
                 post={p}
-                onDelete={(id) =>
-                  setPosts((prev) => prev.filter((x) => x.id !== id))
-                }
+                onDelete={(id) => setPosts((prev) => prev.filter((x) => x.id !== id))}
                 openUserProfile={openUserProfile}
               />
             </div>
           ))}
           {hasMore && (
-            <div style={{ textAlign: "center", padding: 16 }}>
+            <div className="load-more-wrap">
               <button
                 className="btn btn-secondary"
                 onClick={() => loadPosts(curPage + 1, true)}
                 disabled={loadingMore}
               >
-                {loadingMore ? (
-                  <span className="spinner" style={{ width: 16, height: 16 }} />
-                ) : (
-                  "Xem thêm bài viết"
-                )}
+                {loadingMore ? <span className="spinner" style={{ width: 16, height: 16 }} /> : "Xem thêm bài viết"}
               </button>
             </div>
           )}
