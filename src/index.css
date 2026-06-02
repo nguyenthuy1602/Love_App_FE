@@ -560,7 +560,11 @@ textarea.input-field {
 }
 
 .story-card-add {
-  background: linear-gradient(180deg, rgba(95, 133, 219, 0.12), rgba(255, 255, 255, 0.96));
+  background: linear-gradient(
+    180deg,
+    rgba(95, 133, 219, 0.12),
+    rgba(255, 255, 255, 0.96)
+  );
   border-color: rgba(95, 133, 219, 0.2);
 }
 

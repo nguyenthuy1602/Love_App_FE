@@ -889,7 +889,10 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
 
       <div className="feed-intro">
         <h1>Trang chủ</h1>
-        <p>Khám phá câu chuyện của mọi người và chia sẻ cảm xúc của bạn ngay hôm nay.</p>
+        <p>
+          Khám phá câu chuyện của mọi người và chia sẻ cảm xúc của bạn ngay hôm
+          nay.
+        </p>
       </div>
 
       <div className="stories-row">
@@ -938,10 +941,15 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
       ) : (
         <div className="feed-list">
           {posts.map((p, i) => (
-            <div key={p.id} style={{ animationDelay: `${Math.min(i, 5) * 0.05}s` }}>
+            <div
+              key={p.id}
+              style={{ animationDelay: `${Math.min(i, 5) * 0.05}s` }}
+            >
               <PostCard
                 post={p}
-                onDelete={(id) => setPosts((prev) => prev.filter((x) => x.id !== id))}
+                onDelete={(id) =>
+                  setPosts((prev) => prev.filter((x) => x.id !== id))
+                }
                 openUserProfile={openUserProfile}
               />
             </div>
@@ -953,7 +961,11 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 onClick={() => loadPosts(curPage + 1, true)}
                 disabled={loadingMore}
               >
-                {loadingMore ? <span className="spinner" style={{ width: 16, height: 16 }} /> : "Xem thêm bài viết"}
+                {loadingMore ? (
+                  <span className="spinner" style={{ width: 16, height: 16 }} />
+                ) : (
+                  "Xem thêm bài viết"
+                )}
               </button>
             </div>
           )}
