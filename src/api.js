@@ -1,5 +1,8 @@
-export const BASE_URL = "https://love-app-igja.onrender.com";
 const IS_DEV = Boolean(import.meta?.env?.DEV);
+const RAW_API_BASE_URL = import.meta?.env?.VITE_API_BASE_URL?.trim();
+const RAW_WS_BASE_URL = import.meta?.env?.VITE_WS_BASE_URL?.trim();
+
+export const BASE_URL = IS_DEV ? "" : RAW_API_BASE_URL || "";
 
 const req = (method, path, body, isForm = false) => {
   const url = `${BASE_URL}${path}`;
@@ -69,4 +72,20 @@ export const api = {
   postForm: (path, formData) => req("POST", path, formData, true),
 };
 
-export const WS_BASE = "wss://love-app-igja.onrender.com";
+const deriveWsBase = () => {
+  if (IS_DEV) return "ws://localhost:8000";
+  if (RAW_WS_BASE_URL) return RAW_WS_BASE_URL;
+  try {
+    if (typeof window !== "undefined") {
+      const loc = window.location;
+      const proto = loc.protocol === "https:" ? "wss:" : "ws:";
+      // Default backend port is 8000; keep hostname from current origin
+      return `${proto}//${loc.hostname}:8000`;
+    }
+  } catch (e) {
+    // ignore
+  }
+  return "";
+};
+
+export const WS_BASE = deriveWsBase();
