@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { api, BASE_URL } from "../api";
 import { useAuth } from "../AuthContext";
 import { useToast } from "../ToastContext";
@@ -819,14 +820,21 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
     });
   };
 
+  const navigate = useNavigate();
+
   const openMatchChat = (match) => {
-    if (!setChatMatch || !setPage) return;
-    setChatMatch({
-      id: match.id,
-      name: match.user2_username,
-      avatar_url: match.user2_avatar_url,
-    });
-    setPage("messages");
+    // Prefer react-router navigation to allow deep links: /messages/:id
+    try {
+      navigate(`/messages/${match.id}`);
+    } catch (e) {}
+
+    if (setChatMatch)
+      setChatMatch({
+        id: match.id,
+        name: match.user2_username,
+        avatar_url: match.user2_avatar_url,
+      });
+    if (setPage) setPage("messages");
   };
 
   return (
@@ -854,6 +862,7 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
             <button
               type="button"
               className="btn btn-secondary"
+              onClick={scrollToCreatePost}
               style={{
                 minWidth: 88,
                 height: 102,
@@ -888,8 +897,11 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
               </span>
             </button>
             {matches.slice(0, 5).map((m) => (
-              <div
+              <button
                 key={m.id}
+                type="button"
+                onClick={() => openMatchChat(m)}
+                title={`Chat với ${m.user2_username}`}
                 style={{
                   minWidth: 88,
                   height: 102,
@@ -903,10 +915,12 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                   padding: 10,
                   gap: 8,
                   cursor: "pointer",
+                  textAlign: "center",
                 }}
               >
                 <div
                   style={{
+                    position: "relative",
                     width: 52,
                     height: 52,
                     borderRadius: "50%",
@@ -919,12 +933,25 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                     name={m.user2_username}
                     size={52}
                   />
+                  {m.partner_is_online && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        bottom: 2,
+                        right: 2,
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        background: "#22c55e",
+                        border: "2px solid white",
+                      }}
+                    />
+                  )}
                 </div>
                 <span
                   style={{
                     fontSize: 12,
                     color: "var(--ink)",
-                    textAlign: "center",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
                     whiteSpace: "nowrap",
@@ -933,7 +960,7 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 >
                   {m.user2_username}
                 </span>
-              </div>
+              </button>
             ))}
           </div>
 
