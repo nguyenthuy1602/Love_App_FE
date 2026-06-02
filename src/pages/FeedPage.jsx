@@ -844,27 +844,111 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         <div style={{ flex: "1 1 560px", minWidth: 320, maxWidth: 760 }}>
           <div
             style={{
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              borderRadius: 20,
-              padding: 22,
+              overflowX: "auto",
+              display: "flex",
+              gap: 12,
+              paddingBottom: 12,
               marginBottom: 20,
-              boxShadow: "var(--shadow-sm)",
             }}
           >
+            <button
+              type="button"
+              className="btn btn-secondary"
+              style={{
+                minWidth: 88,
+                height: 102,
+                borderRadius: 22,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 8,
+                whiteSpace: "nowrap",
+              }}
+            >
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "var(--rose-pale)",
+                  color: "var(--rose)",
+                  fontSize: 24,
+                }}
+              >
+                +
+              </div>
+              <span style={{ fontSize: 12, color: "var(--ink)", fontWeight: 700 }}>
+                Thêm tin
+              </span>
+            </button>
+            {matches.slice(0, 5).map((m) => (
+              <div
+                key={m.id}
+                style={{
+                  minWidth: 88,
+                  height: 102,
+                  borderRadius: 22,
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: 10,
+                  gap: 8,
+                  cursor: "pointer",
+                }}
+              >
+                <div
+                  style={{
+                    width: 52,
+                    height: 52,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "2px solid var(--rose)",
+                  }}
+                >
+                  <AvatarImg
+                    src={m.user2_avatar_url}
+                    name={m.user2_username}
+                    size={52}
+                  />
+                </div>
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: "var(--ink)",
+                    textAlign: "center",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    width: 72,
+                  }}
+                >
+                  {m.user2_username}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div className="card" style={{ padding: 20, marginBottom: 20 }}>
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: 16,
+                gap: 14,
                 flexWrap: "wrap",
               }}
             >
               <div style={{ minWidth: 0, flex: 1 }}>
                 <div
                   style={{
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: 700,
                     color: "var(--rose)",
                     marginBottom: 8,
@@ -872,11 +956,8 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 >
                   Đăng tin nhanh
                 </div>
-                <p
-                  style={{ color: "var(--ink-soft)", fontSize: 14, margin: 0 }}
-                >
-                  Chia sẻ tâm trạng, hình ảnh hoặc video mới để mọi người kết
-                  nối cùng bạn.
+                <p style={{ margin: 0, color: "var(--ink-soft)", fontSize: 14 }}>
+                  Chia sẻ trạng thái, ảnh hoặc video để mọi người kết nối cùng bạn.
                 </p>
               </div>
               <button
@@ -887,52 +968,8 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 Đăng tin ngay
               </button>
             </div>
-
-            <div
-              style={{
-                marginTop: 20,
-                display: "grid",
-                gap: 12,
-              }}
-            >
-              <div
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 16,
-                  padding: 14,
-                }}
-              >
-                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
-                  📰 Tin nóng
-                </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Mở nhanh chat với người ghép đôi ở bên phải để bắt đầu kết
-                  nối.
-                </p>
-              </div>
-              <div
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 16,
-                  padding: 14,
-                }}
-              >
-                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
-                  ✨ Mẹo đăng bài
-                </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Đăng ảnh/video kèm caption rõ ràng để dễ thu hút và tăng tương
-                  tác.
-                </p>
-              </div>
-            </div>
           </div>
+
           <div ref={postSectionRef}>
             <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
           </div>
@@ -946,29 +983,37 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
             alignSelf: "flex-start",
           }}
         >
-          <div className="card" style={{ padding: 20, marginBottom: 20 }}>
+          <div className="card" style={{ padding: 20 }}>
             <div
               style={{
                 display: "flex",
-                flexWrap: "wrap",
                 alignItems: "center",
                 justifyContent: "space-between",
                 gap: 12,
-                marginBottom: 14,
+                flexWrap: "wrap",
+                marginBottom: 16,
               }}
             >
               <div>
                 <div style={{ fontSize: 16, fontWeight: 700 }}>
-                  Bạn đã ghép đôi
+                  Bạn bè đang hoạt động
                 </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Nhấn vào để mở chat nhanh.
+                <p style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}>
+                  Nhấn vào để chat ngay.
                 </p>
               </div>
-              <span style={{ fontSize: 12, color: "var(--ink-soft)" }}>
-                {matchesLoading ? "..." : `${matches.length} người`}
+              <span
+                style={{
+                  fontSize: 12,
+                  color: "var(--ink-soft)",
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  background: "var(--surface-container)",
+                }}
+              >
+                {matchesLoading
+                  ? "..."
+                  : `${matches.filter((item) => item.partner_is_online).length} online`}
               </span>
             </div>
 
@@ -1048,66 +1093,26 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {m.user2_bio || "Nhấn để chat..."}
+                        {m.user2_bio || (m.partner_is_online ? "Trực tuyến" : "Ngoại tuyến")}
                       </div>
                     </div>
-                    <span
+                    <div
                       style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        color: m.partner_is_online
-                          ? "#22c55e"
-                          : "var(--ink-soft)",
+                        width: 32,
+                        height: 32,
+                        borderRadius: 12,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "rgba(226, 88, 121, 0.14)",
                       }}
                     >
-                      {m.partner_is_online ? "Online" : "Offline"}
-                    </span>
+                      <span style={{ color: "var(--rose)", fontSize: 16 }}>💬</span>
+                    </div>
                   </button>
                 ))}
               </div>
             )}
-          </div>
-
-          <div className="card" style={{ padding: 20 }}>
-            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 14 }}>
-              Tin gợi ý
-            </div>
-            <div style={{ display: "grid", gap: 12 }}>
-              <div
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 16,
-                  padding: 14,
-                }}
-              >
-                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>
-                  🔥 Đăng video ngắn
-                </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Video 5-10s giúp profile thêm nổi bật và tăng tương tác.
-                </p>
-              </div>
-              <div
-                style={{
-                  background: "var(--surface)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 16,
-                  padding: 14,
-                }}
-              >
-                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>
-                  💡 Caption rõ ràng
-                </div>
-                <p
-                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
-                >
-                  Viết cảm xúc thật để người ghép đôi dễ hiểu bạn hơn.
-                </p>
-              </div>
-            </div>
           </div>
         </aside>
       </div>
