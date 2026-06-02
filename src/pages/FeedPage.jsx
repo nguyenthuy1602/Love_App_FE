@@ -47,6 +47,13 @@ function timeAgo(date) {
   }
 }
 
+function getReactionTotal(reactions) {
+  return REACTIONS.reduce(
+    (sum, r) => sum + Number(reactions?.[r.key] || 0),
+    0,
+  );
+}
+
 function SentimentBadge({ score }) {
   if (!score) return null;
   const map = {
@@ -540,11 +547,11 @@ function PostCard({ post, onDelete, openUserProfile }) {
                   gap: 6,
                 }}
               >
-                <span style={{ color: "var(--rose)" }}>•</span>
-                <span>{reactionTotal} lượt tương tác</span>
+                <span style={{ color: "var(--rose)" }}>💖</span>
+                <span>{reactionTotal} cảm xúc</span>
               </span>
             ) : (
-              <span>Chưa có tương tác</span>
+              <span>Chưa có cảm xúc</span>
             )}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -824,6 +831,16 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   const toast = useToast();
   const postSectionRef = useRef(null);
 
+  const totalReactions = posts.reduce(
+    (sum, post) => sum + getReactionTotal(post.reactions || {}),
+    0,
+  );
+  const totalComments = posts.reduce(
+    (sum, post) => sum + Number(post.comment_count || 0),
+    0,
+  );
+  const activeMatches = matches.filter((m) => m.partner_is_online).length;
+
   const loadPosts = useCallback(
     async (pg = 1, append = false) => {
       pg === 1 ? setLoading(true) : setLoadingMore(true);
@@ -884,12 +901,74 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   return (
     <div style={{ maxWidth: 1120, margin: "0 auto", padding: "24px 20px" }}>
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 28, color: "var(--rose)", marginBottom: 4 }}>
+        <h1 style={{ fontSize: 34, color: "var(--rose)", marginBottom: 8 }}>
           Trang chủ
         </h1>
-        <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>
-          Đọc tin, đăng bài và nhắn nhanh với bạn ghép đôi.
+        <p style={{ color: "var(--ink-soft)", fontSize: 15, maxWidth: 680, lineHeight: 1.8 }}>
+          Đọc tin, chia sẻ cảm xúc và kết nối nhanh với người phù hợp. Aura giúp bạn hiển thị cảm xúc rõ ràng và tương tác theo cách mềm mại, thân thiện.
         </p>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+          gap: 14,
+          marginBottom: 22,
+        }}
+      >
+        <div
+          className="card"
+          style={{
+            padding: 18,
+            borderRadius: 22,
+            background: "linear-gradient(135deg, var(--rose-pale), var(--cream))",
+            border: "1px solid rgba(232, 54, 74, 0.12)",
+          }}
+        >
+          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+            Tổng số bài viết
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
+            {posts.length}
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
+          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+            Cảm xúc hiện tại
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
+            {totalReactions}
+          </div>
+          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
+            Tổng tương tác từ các bài viết
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
+          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+            Bình luận
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
+            {totalComments}
+          </div>
+          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
+            Đếm bình luận trong feed hiện tại
+          </div>
+        </div>
+
+        <div className="card" style={{ padding: 18, borderRadius: 22 }}>
+          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+            Bạn bè online
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
+            {matchesLoading ? "..." : activeMatches}
+          </div>
+          <div style={{ marginTop: 6, fontSize: 13, color: "var(--ink-soft)" }}>
+            Sẵn sàng để chat ngay
+          </div>
+        </div>
       </div>
 
       <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
