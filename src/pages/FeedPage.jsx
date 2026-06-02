@@ -881,7 +881,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
               >
                 +
               </div>
-              <span style={{ fontSize: 12, color: "var(--ink)", fontWeight: 700 }}>
+              <span
+                style={{ fontSize: 12, color: "var(--ink)", fontWeight: 700 }}
+              >
                 Thêm tin
               </span>
             </button>
@@ -956,8 +958,11 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 >
                   Đăng tin nhanh
                 </div>
-                <p style={{ margin: 0, color: "var(--ink-soft)", fontSize: 14 }}>
-                  Chia sẻ trạng thái, ảnh hoặc video để mọi người kết nối cùng bạn.
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 14 }}
+                >
+                  Chia sẻ trạng thái, ảnh hoặc video để mọi người kết nối cùng
+                  bạn.
                 </p>
               </div>
               <button
@@ -998,7 +1003,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                 <div style={{ fontSize: 16, fontWeight: 700 }}>
                   Bạn bè đang hoạt động
                 </div>
-                <p style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
                   Nhấn vào để chat ngay.
                 </p>
               </div>
@@ -1093,7 +1100,8 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {m.user2_bio || (m.partner_is_online ? "Trực tuyến" : "Ngoại tuyến")}
+                        {m.user2_bio ||
+                          (m.partner_is_online ? "Trực tuyến" : "Ngoại tuyến")}
                       </div>
                     </div>
                     <div
@@ -1107,7 +1115,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
                         background: "rgba(226, 88, 121, 0.14)",
                       }}
                     >
-                      <span style={{ color: "var(--rose)", fontSize: 16 }}>💬</span>
+                      <span style={{ color: "var(--rose)", fontSize: 16 }}>
+                        💬
+                      </span>
                     </div>
                   </button>
                 ))}
