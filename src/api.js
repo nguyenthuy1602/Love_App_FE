@@ -2,7 +2,11 @@ const IS_DEV = Boolean(import.meta?.env?.DEV);
 const RAW_API_BASE_URL = import.meta?.env?.VITE_API_BASE_URL?.trim();
 const RAW_WS_BASE_URL = import.meta?.env?.VITE_WS_BASE_URL?.trim();
 
-export const BASE_URL = IS_DEV ? "" : RAW_API_BASE_URL || "";
+// Backend production host is Render; Vercel FE should call this backend when env is not provided.
+const DEFAULT_API_BASE_URL = "https://love-app-igja.onrender.com";
+const DEFAULT_WS_BASE_URL = "wss://love-app-igja.onrender.com";
+
+export const BASE_URL = IS_DEV ? "" : RAW_API_BASE_URL || DEFAULT_API_BASE_URL;
 
 const req = (method, path, body, isForm = false) => {
   const url = `${BASE_URL}${path}`;
@@ -77,15 +81,13 @@ const deriveWsBase = () => {
   if (RAW_WS_BASE_URL) return RAW_WS_BASE_URL;
   try {
     if (typeof window !== "undefined") {
-      const loc = window.location;
-      const proto = loc.protocol === "https:" ? "wss:" : "ws:";
-      // Default backend port is 8000; keep hostname from current origin
-      return `${proto}//${loc.hostname}:8000`;
+      // When FE is deployed separately from backend, use the Render host directly.
+      return DEFAULT_WS_BASE_URL;
     }
   } catch (e) {
     // ignore
   }
-  return "";
+  return DEFAULT_WS_BASE_URL;
 };
 
 export const WS_BASE = deriveWsBase();

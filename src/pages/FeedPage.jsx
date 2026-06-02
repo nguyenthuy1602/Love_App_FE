@@ -114,7 +114,7 @@ function ReactionBar({ reactions, postId, onUpdate }) {
       >
         {myReaction ? myReaction.emoji : "🤍"}
         <span style={{ marginLeft: 6, fontSize: 13 }}>
-          {total > 0 ? `${total} lượt tương tác` : "Tương tác"}
+          {`${total} lượt tương tác`}
         </span>
       </button>
       {show && (
@@ -506,14 +506,25 @@ function PostCard({ post, onDelete, openUserProfile }) {
             <img
               src={resolveMediaUrl(post.media_urls[0])}
               alt=""
-              style={{ width: "100%", maxHeight: 500, objectFit: "cover" }}
+              style={{
+                width: "100%",
+                height: "auto",
+                maxHeight: 760,
+                objectFit: "contain",
+                borderRadius: 0,
+              }}
             />
           )}
           {post.media_type === "video" && (
             <video
               src={resolveMediaUrl(post.media_urls[0])}
               controls
-              style={{ width: "100%", maxHeight: 480 }}
+              style={{
+                width: "100%",
+                maxHeight: 760,
+                height: "auto",
+                borderRadius: 0,
+              }}
             />
           )}
         </div>
@@ -525,14 +536,10 @@ function PostCard({ post, onDelete, openUserProfile }) {
             {topReactions.slice(0, 3).map((reaction) => (
               <span key={reaction.key}>{reaction.emoji}</span>
             ))}
-            {reactionTotal > 0 ? (
-              <span>
-                <span>💖</span>
-                <span>{reactionTotal} cảm xúc</span>
-              </span>
-            ) : (
-              <span>Chưa có cảm xúc</span>
-            )}
+            <span>
+              <span>💖</span>
+              <span>{reactionTotal} cảm xúc</span>
+            </span>
           </div>
           <div className="comment-pill">
             <span>💬</span>
