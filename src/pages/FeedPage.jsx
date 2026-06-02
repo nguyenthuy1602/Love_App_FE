@@ -830,196 +830,286 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   };
 
   return (
-    <div style={{ maxWidth: 620, margin: "0 auto", padding: "24px 20px" }}>
+    <div style={{ maxWidth: 1120, margin: "0 auto", padding: "24px 20px" }}>
       <div style={{ marginBottom: 24 }}>
         <h1 style={{ fontSize: 28, color: "var(--rose)", marginBottom: 4 }}>
           Trang chủ
         </h1>
         <p style={{ color: "var(--ink-soft)", fontSize: 14 }}>
-          Khám phá câu chuyện của mọi người
+          Đọc tin, đăng bài và nhắn nhanh với bạn ghép đôi.
         </p>
       </div>
 
-      <div
-        style={{
-          background: "var(--surface)",
-          border: "1px solid var(--border)",
-          borderRadius: 20,
-          padding: 22,
-          marginBottom: 20,
-          boxShadow: "var(--shadow-sm)",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 16,
-            flexWrap: "wrap",
-          }}
-        >
-          <div style={{ minWidth: 0, flex: 1 }}>
-            <div
-              style={{
-                fontSize: 22,
-                fontWeight: 700,
-                color: "var(--rose)",
-                marginBottom: 8,
-              }}
-            >
-              Đăng tin nhanh
-            </div>
-            <p style={{ color: "var(--ink-soft)", fontSize: 14, margin: 0 }}>
-              Chia sẻ tâm trạng, hình ảnh hoặc video mới để mọi người kết nối
-              cùng bạn.
-            </p>
-          </div>
-          <button
-            className="btn btn-primary"
-            onClick={scrollToCreatePost}
-            style={{ whiteSpace: "nowrap" }}
-          >
-            Đăng tin ngay
-          </button>
-        </div>
-
-        <div
-          style={{
-            marginTop: 20,
-            display: "grid",
-            gap: 12,
-          }}
-        >
+      <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+        <div style={{ flex: "1 1 560px", minWidth: 320, maxWidth: 760 }}>
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              flexWrap: "wrap",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: 20,
+              padding: 22,
+              marginBottom: 20,
+              boxShadow: "var(--shadow-sm)",
             }}
           >
-            <div>
-              <div
-                style={{
-                  fontSize: 15,
-                  fontWeight: 700,
-                  marginBottom: 4,
-                }}
-              >
-                Bạn bè đã ghép đôi
-              </div>
-              <p
-                style={{
-                  margin: 0,
-                  color: "var(--ink-soft)",
-                  fontSize: 13,
-                }}
-              >
-                Xem ai đang online và bật vào chat ngay.
-              </p>
-            </div>
-            <span
+            <div
               style={{
-                fontSize: 13,
-                color: "var(--ink-soft)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 16,
+                flexWrap: "wrap",
               }}
             >
-              {matchesLoading
-                ? "Đang tải..."
-                : `${matches.length} người đã ghép đôi`}
-            </span>
-          </div>
-
-          {matchesLoading ? (
-            <div className="page-loader" style={{ padding: 18 }}>
-              <span className="spinner" />
-            </div>
-          ) : matches.length === 0 ? (
-            <div
-              className="empty-state"
-              style={{ padding: 18, borderRadius: 16 }}
-            >
-              <div style={{ fontSize: 22, marginBottom: 8 }}>💘</div>
-              <p style={{ margin: 0, color: "var(--ink-soft)" }}>
-                Chưa có ai kết đôi. Hãy đăng tin và tương tác để tăng cơ hội.
-              </p>
-            </div>
-          ) : (
-            <div style={{ display: "grid", gap: 10 }}>
-              {matches.slice(0, 4).map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => openMatchChat(m)}
+              <div style={{ minWidth: 0, flex: 1 }}>
+                <div
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    width: "100%",
-                    padding: "14px 16px",
-                    borderRadius: 16,
-                    background: "var(--surface)",
-                    border: "1px solid var(--border)",
-                    cursor: "pointer",
-                    textAlign: "left",
+                    fontSize: 22,
+                    fontWeight: 700,
+                    color: "var(--rose)",
+                    marginBottom: 8,
                   }}
                 >
-                  <div style={{ position: "relative" }}>
-                    <AvatarImg
-                      src={m.user2_avatar_url}
-                      name={m.user2_username}
-                      size={44}
-                    />
-                    {m.partner_is_online && (
-                      <div
-                        className="online-dot"
-                        style={{ position: "absolute", bottom: 0, right: 0 }}
-                      />
-                    )}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: 15,
-                        fontWeight: 700,
-                        marginBottom: 3,
-                      }}
-                    >
-                      {m.user2_username}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        color: "var(--ink-soft)",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {m.user2_bio || "Nhấn để bắt đầu chat..."}
-                    </div>
-                  </div>
-                  <span
+                  Đăng tin nhanh
+                </div>
+                <p
+                  style={{ color: "var(--ink-soft)", fontSize: 14, margin: 0 }}
+                >
+                  Chia sẻ tâm trạng, hình ảnh hoặc video mới để mọi người kết
+                  nối cùng bạn.
+                </p>
+              </div>
+              <button
+                className="btn btn-primary"
+                onClick={scrollToCreatePost}
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Đăng tin ngay
+              </button>
+            </div>
+
+            <div
+              style={{
+                marginTop: 20,
+                display: "grid",
+                gap: 12,
+              }}
+            >
+              <div
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 16,
+                  padding: 14,
+                }}
+              >
+                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
+                  📰 Tin nóng
+                </div>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
+                  Mở nhanh chat với người ghép đôi ở bên phải để bắt đầu kết
+                  nối.
+                </p>
+              </div>
+              <div
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 16,
+                  padding: 14,
+                }}
+              >
+                <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 6 }}>
+                  ✨ Mẹo đăng bài
+                </div>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
+                  Đăng ảnh/video kèm caption rõ ràng để dễ thu hút và tăng tương
+                  tác.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div ref={postSectionRef}>
+            <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
+          </div>
+        </div>
+
+        <aside
+          style={{
+            flex: "0 0 300px",
+            minWidth: 280,
+            maxWidth: 320,
+            alignSelf: "flex-start",
+          }}
+        >
+          <div className="card" style={{ padding: 20, marginBottom: 20 }}>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 12,
+                marginBottom: 14,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: 16, fontWeight: 700 }}>
+                  Bạn đã ghép đôi
+                </div>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
+                  Nhấn vào để mở chat nhanh.
+                </p>
+              </div>
+              <span style={{ fontSize: 12, color: "var(--ink-soft)" }}>
+                {matchesLoading ? "..." : `${matches.length} người`}
+              </span>
+            </div>
+
+            {matchesLoading ? (
+              <div className="page-loader" style={{ padding: 18 }}>
+                <span className="spinner" />
+              </div>
+            ) : matches.length === 0 ? (
+              <div
+                className="empty-state"
+                style={{ padding: 18, borderRadius: 16 }}
+              >
+                <div style={{ fontSize: 22, marginBottom: 8 }}>💔</div>
+                <p style={{ margin: 0, color: "var(--ink-soft)" }}>
+                  Chưa có ai ghép đôi. Hãy đăng bài và tương tác ngay.
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: "grid", gap: 12 }}>
+                {matches.slice(0, 6).map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => openMatchChat(m)}
                     style={{
-                      fontSize: 12,
-                      color: m.partner_is_online
-                        ? "#22c55e"
-                        : "var(--ink-soft)",
-                      fontWeight: 600,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 12,
+                      width: "100%",
+                      padding: "12px 14px",
+                      borderRadius: 16,
+                      background: "var(--surface)",
+                      border: "1px solid var(--border)",
+                      cursor: "pointer",
+                      textAlign: "left",
                     }}
                   >
-                    {m.partner_is_online ? "● Online" : "Offline"}
-                  </span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
+                    <div style={{ position: "relative" }}>
+                      <AvatarImg
+                        src={m.user2_avatar_url}
+                        name={m.user2_username}
+                        size={40}
+                      />
+                      {m.partner_is_online && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            bottom: 0,
+                            right: 0,
+                            width: 10,
+                            height: 10,
+                            borderRadius: "50%",
+                            background: "#22c55e",
+                            border: "2px solid var(--surface)",
+                          }}
+                        />
+                      )}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 14,
+                          fontWeight: 700,
+                          marginBottom: 4,
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {m.user2_username}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: "var(--ink-soft)",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {m.user2_bio || "Nhấn để chat..."}
+                      </div>
+                    </div>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: m.partner_is_online
+                          ? "#22c55e"
+                          : "var(--ink-soft)",
+                      }}
+                    >
+                      {m.partner_is_online ? "Online" : "Offline"}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-      <div ref={postSectionRef}>
-        <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
+          <div className="card" style={{ padding: 20 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, marginBottom: 14 }}>
+              Tin gợi ý
+            </div>
+            <div style={{ display: "grid", gap: 12 }}>
+              <div
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 16,
+                  padding: 14,
+                }}
+              >
+                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>
+                  🔥 Đăng video ngắn
+                </div>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
+                  Video 5-10s giúp profile thêm nổi bật và tăng tương tác.
+                </p>
+              </div>
+              <div
+                style={{
+                  background: "var(--surface)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 16,
+                  padding: 14,
+                }}
+              >
+                <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>
+                  💡 Caption rõ ràng
+                </div>
+                <p
+                  style={{ margin: 0, color: "var(--ink-soft)", fontSize: 13 }}
+                >
+                  Viết cảm xúc thật để người ghép đôi dễ hiểu bạn hơn.
+                </p>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
 
       {loading ? (
