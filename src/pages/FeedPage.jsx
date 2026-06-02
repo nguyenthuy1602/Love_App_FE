@@ -9,11 +9,11 @@ import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 
 const REACTIONS = [
-  { key: "like", emoji: "👍" },
-  { key: "love", emoji: "❤️" },
-  { key: "haha", emoji: "😂" },
+  { key: "heart", emoji: "❤️" },
   { key: "sad", emoji: "😢" },
-  { key: "angry", emoji: "😡" },
+  { key: "wow", emoji: "😮" },
+  { key: "haha", emoji: "😂" },
+  { key: "fire", emoji: "🔥" },
 ];
 
 const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
