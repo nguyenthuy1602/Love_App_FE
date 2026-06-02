@@ -9,23 +9,23 @@
 }
 
 :root {
-  --rose: #2b4d8c;
-  --rose-light: #5f85db;
-  --rose-pale: #d7e2fb;
-  --blush: #f2c77f;
-  --cream: #f8fbff;
-  --warm-white: #eef3ff;
-  --ink: #112144;
-  --ink-mid: #3f527b;
-  --ink-soft: #6d7aa5;
-  --ink-ghost: #a9b2d1;
+  --rose: #db829b;
+  --rose-light: #f3b5cf;
+  --rose-pale: #fde6f0;
+  --blush: #f9d7e7;
+  --cream: #fff5f8;
+  --warm-white: #fff0f6;
+  --ink: #42263d;
+  --ink-mid: #6d4a63;
+  --ink-soft: #9d7c96;
+  --ink-ghost: #c7afc2;
   --gold: #f5b451;
   --gold-light: #f7d18e;
   --surface: #ffffff;
-  --border: rgba(75, 105, 191, 0.14);
-  --shadow-sm: 0 4px 16px rgba(75, 105, 191, 0.08);
-  --shadow-md: 0 12px 34px rgba(75, 105, 191, 0.12);
-  --shadow-lg: 0 24px 70px rgba(75, 105, 191, 0.16);
+  --border: rgba(219, 147, 191, 0.24);
+  --shadow-sm: 0 4px 16px rgba(219, 147, 191, 0.12);
+  --shadow-md: 0 12px 34px rgba(219, 147, 191, 0.14);
+  --shadow-lg: 0 24px 70px rgba(219, 147, 191, 0.18);
   --radius: 18px;
   --radius-sm: 12px;
   --radius-lg: 28px;
@@ -270,7 +270,7 @@ textarea.input-field {
 
 .page-shell {
   min-height: 100vh;
-  background: linear-gradient(180deg, #f3f6ff 0%, #eef3ff 45%, #fbfbff 100%);
+  background: linear-gradient(180deg, #fff5f8 0%, #ffeaf3 45%, #fff5f8 100%);
   padding: 28px 24px 36px;
 }
 
@@ -304,11 +304,11 @@ textarea.input-field {
   border-radius: 24px;
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.96),
-    rgba(238, 243, 255, 0.85)
+    rgba(255, 245, 251, 0.96),
+    rgba(255, 233, 244, 0.85)
   );
   border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 12px 28px rgba(82, 106, 187, 0.09);
+  box-shadow: 0 12px 28px rgba(219, 147, 191, 0.08);
 }
 
 .stats-card strong {
@@ -343,7 +343,7 @@ textarea.input-field {
   border-radius: 22px;
   background: var(--surface);
   border: 1px solid var(--border);
-  box-shadow: 0 10px 24px rgba(82, 106, 187, 0.06);
+  box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -352,8 +352,8 @@ textarea.input-field {
 }
 
 .story-pill.add {
-  background: linear-gradient(180deg, #eef3ff, #f8fbff);
-  border-color: rgba(95, 133, 219, 0.18);
+  background: linear-gradient(180deg, #fff0f7, #fff5f8);
+  border-color: rgba(219, 147, 191, 0.32);
 }
 
 .story-avatar {
@@ -363,7 +363,7 @@ textarea.input-field {
   overflow: hidden;
   display: grid;
   place-items: center;
-  border: 2px solid rgba(95, 133, 219, 0.16);
+  border: 2px solid rgba(219, 147, 191, 0.24);
 }
 
 .story-pill span {
@@ -375,9 +375,9 @@ textarea.input-field {
 .hero-panel {
   padding: 22px;
   border-radius: 28px;
-  background: linear-gradient(180deg, #ffffff, #eef3ff);
-  border: 1px solid rgba(95, 133, 219, 0.14);
-  box-shadow: 0 16px 34px rgba(82, 106, 187, 0.08);
+  background: linear-gradient(180deg, #ffffff, #fff3f7);
+  border: 1px solid rgba(219, 147, 191, 0.18);
+  box-shadow: 0 16px 34px rgba(219, 147, 191, 0.08);
   margin-bottom: 18px;
 }
 
@@ -396,9 +396,9 @@ textarea.input-field {
 .sidebar-panel {
   padding: 22px;
   border-radius: 28px;
-  background: linear-gradient(180deg, #fbfbff, #eef3ff);
-  border: 1px solid rgba(95, 133, 219, 0.12);
-  box-shadow: 0 14px 30px rgba(82, 106, 187, 0.06);
+  background: linear-gradient(180deg, #fff5f8, #fff0f5);
+  border: 1px solid rgba(219, 147, 191, 0.16);
+  box-shadow: 0 14px 30px rgba(219, 147, 191, 0.06);
 }
 
 .sidebar-header {
@@ -420,7 +420,7 @@ textarea.input-field {
   padding: 5px 10px;
   border-radius: 999px;
   color: var(--ink-soft);
-  background: rgba(95, 133, 219, 0.1);
+  background: rgba(219, 147, 191, 0.12);
 }
 
 .friend-chip {
@@ -431,7 +431,7 @@ textarea.input-field {
   padding: 13px 14px;
   border-radius: 20px;
   background: var(--surface);
-  border: 1px solid rgba(95, 133, 219, 0.1);
+  border: 1px solid rgba(219, 147, 191, 0.18);
   cursor: pointer;
   transition:
     transform 0.2s ease,
@@ -440,7 +440,7 @@ textarea.input-field {
 
 .friend-chip:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(82, 106, 187, 0.08);
+  box-shadow: 0 10px 20px rgba(219, 147, 191, 0.1);
 }
 
 .friend-chip .avatar {
@@ -453,8 +453,8 @@ textarea.input-field {
   margin-top: 16px;
   padding: 24px;
   border-radius: 28px;
-  background: linear-gradient(135deg, #f5b451, #f7d18e);
-  color: #2b3d5b;
+  background: linear-gradient(135deg, #ffd1e6, #ffeaf3);
+  color: #4b2f44;
   position: relative;
   overflow: hidden;
 }
@@ -508,7 +508,7 @@ textarea.input-field {
   padding: 12px 18px;
   border-radius: 24px;
   background: #ffffff;
-  border: 1px solid rgba(75, 105, 191, 0.12);
+  border: 1px solid rgba(219, 147, 191, 0.22);
   box-shadow: var(--shadow-sm);
   color: var(--ink-mid);
   font-size: 14px;
@@ -562,10 +562,10 @@ textarea.input-field {
 .story-card-add {
   background: linear-gradient(
     180deg,
-    rgba(95, 133, 219, 0.12),
+    rgba(219, 147, 191, 0.14),
     rgba(255, 255, 255, 0.96)
   );
-  border-color: rgba(95, 133, 219, 0.2);
+  border-color: rgba(219, 147, 191, 0.28);
 }
 
 .story-avatar {
@@ -575,7 +575,7 @@ textarea.input-field {
   overflow: hidden;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(75, 105, 191, 0.12);
+  border: 1px solid rgba(219, 147, 191, 0.18);
 }
 
 .story-avatar-add {
@@ -584,7 +584,7 @@ textarea.input-field {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: rgba(95, 133, 219, 0.18);
+  background: rgba(219, 147, 191, 0.22);
   color: var(--rose);
   font-size: 24px;
 }
@@ -624,11 +624,11 @@ textarea.input-field {
 .btn-primary:hover:not(:disabled) {
   background: var(--rose-light);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(95, 133, 219, 0.24);
+  box-shadow: 0 8px 24px rgba(219, 147, 191, 0.22);
 }
 
 .btn-secondary {
-  background: #eef3ff;
+  background: #ffeaf3;
   color: var(--rose);
 }
 
@@ -637,16 +637,16 @@ textarea.input-field {
 }
 
 .btn-ghost:hover:not(:disabled) {
-  background: rgba(95, 133, 219, 0.08);
+  background: rgba(219, 147, 191, 0.12);
   color: var(--rose);
 }
 
 .post-card {
   padding: 22px;
   border-radius: 26px;
-  background: linear-gradient(180deg, #ffffff, #f7f9ff);
-  border: 1px solid rgba(95, 133, 219, 0.1);
-  box-shadow: 0 10px 26px rgba(82, 106, 187, 0.06);
+  background: linear-gradient(180deg, #ffffff, #fff4f8);
+  border: 1px solid rgba(219, 147, 191, 0.14);
+  box-shadow: 0 10px 26px rgba(219, 147, 191, 0.06);
 }
 
 .post-card .post-meta {
@@ -673,7 +673,7 @@ textarea.input-field {
   justify-content: space-between;
   gap: 10px;
   padding: 12px 0 0;
-  border-top: 1px solid rgba(95, 133, 219, 0.08);
+  border-top: 1px solid rgba(219, 147, 191, 0.12);
 }
 
 .post-card .reaction-pill,
