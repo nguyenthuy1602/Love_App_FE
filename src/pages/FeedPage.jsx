@@ -15,7 +15,8 @@ const REACTIONS = [
   { key: "fire", emoji: "🔥" },
 ];
 
-const MAX_UPLOAD_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = [
   "image/jpeg",
   "image/png",
@@ -69,7 +70,10 @@ function ReactionBar({ reactions, postId, onUpdate }) {
     return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const total = REACTIONS.reduce((s, r) => s + (reactions?.[r.key] || 0), 0);
+  const total = REACTIONS.reduce(
+    (s, r) => s + Number(reactions?.[r.key] || 0),
+    0,
+  );
   const myReaction = REACTIONS.find((r) => r.key === reactions?.my_reaction);
 
   const react = async (type) => {
@@ -577,8 +581,12 @@ function CreatePost({ onPost }) {
       return;
     }
 
-    if (file.size > MAX_UPLOAD_SIZE_BYTES) {
-      toast(`File vượt quá 10MB (${formatBytes(file.size)}).`, "error");
+    const maxSize = ALLOWED_VIDEO_TYPES.includes(file.type)
+      ? MAX_VIDEO_SIZE_BYTES
+      : MAX_IMAGE_SIZE_BYTES;
+    if (file.size > maxSize) {
+      const label = ALLOWED_VIDEO_TYPES.includes(file.type) ? "50MB" : "10MB";
+      toast(`File vượt quá ${label} (${formatBytes(file.size)}).`, "error");
       e.target.value = "";
       return;
     }
@@ -635,7 +643,7 @@ function CreatePost({ onPost }) {
       setContent("");
       setMediaUrl(null);
       setMediaType(null);
-      toast("Đã đăng bài! Gemini AI đang phân tích cảm xúc ✨", "success");
+      toast("Đã đăng bài! Aura đang phân tích cảm xúc ✨", "success");
     } catch (err) {
       toast(err.message, "error");
     } finally {
@@ -679,7 +687,13 @@ function CreatePost({ onPost }) {
               ) : (
                 <video
                   src={mediaUrl}
-                  style={{ maxHeight: 200, borderRadius: 10 }}
+                  controls
+                  style={{
+                    maxHeight: 200,
+                    borderRadius: 10,
+                    width: "100%",
+                    display: "block",
+                  }}
                 />
               )}
               <button
@@ -754,13 +768,16 @@ function CreatePost({ onPost }) {
   );
 }
 
-export function FeedPage({ openUserProfile }) {
+export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [curPage, setCurPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [matches, setMatches] = useState([]);
+  const [matchesLoading, setMatchesLoading] = useState(true);
   const toast = useToast();
+  const postSectionRef = useRef(null);
 
   const loadPosts = useCallback(
     async (pg = 1, append = false) => {
@@ -786,6 +803,32 @@ export function FeedPage({ openUserProfile }) {
     loadPosts(1);
   }, [loadPosts]);
 
+  useEffect(() => {
+    setMatchesLoading(true);
+    api
+      .get("/api/match/me")
+      .then((d) => setMatches(Array.isArray(d) ? d : []))
+      .catch(() => setMatches([]))
+      .finally(() => setMatchesLoading(false));
+  }, []);
+
+  const scrollToCreatePost = () => {
+    postSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const openMatchChat = (match) => {
+    if (!setChatMatch || !setPage) return;
+    setChatMatch({
+      id: match.id,
+      name: match.user2_username,
+      avatar_url: match.user2_avatar_url,
+    });
+    setPage("messages");
+  };
+
   return (
     <div style={{ maxWidth: 620, margin: "0 auto", padding: "24px 20px" }}>
       <div style={{ marginBottom: 24 }}>
@@ -797,7 +840,187 @@ export function FeedPage({ openUserProfile }) {
         </p>
       </div>
 
-      <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
+      <div
+        style={{
+          background: "var(--surface)",
+          border: "1px solid var(--border)",
+          borderRadius: 20,
+          padding: 22,
+          marginBottom: 20,
+          boxShadow: "var(--shadow-sm)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: "var(--rose)",
+                marginBottom: 8,
+              }}
+            >
+              Đăng tin nhanh
+            </div>
+            <p style={{ color: "var(--ink-soft)", fontSize: 14, margin: 0 }}>
+              Chia sẻ tâm trạng, hình ảnh hoặc video mới để mọi người kết nối
+              cùng bạn.
+            </p>
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={scrollToCreatePost}
+            style={{ whiteSpace: "nowrap" }}
+          >
+            Đăng tin ngay
+          </button>
+        </div>
+
+        <div
+          style={{
+            marginTop: 20,
+            display: "grid",
+            gap: 12,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 12,
+              flexWrap: "wrap",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  fontSize: 15,
+                  fontWeight: 700,
+                  marginBottom: 4,
+                }}
+              >
+                Bạn bè đã ghép đôi
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  color: "var(--ink-soft)",
+                  fontSize: 13,
+                }}
+              >
+                Xem ai đang online và bật vào chat ngay.
+              </p>
+            </div>
+            <span
+              style={{
+                fontSize: 13,
+                color: "var(--ink-soft)",
+              }}
+            >
+              {matchesLoading
+                ? "Đang tải..."
+                : `${matches.length} người đã ghép đôi`}
+            </span>
+          </div>
+
+          {matchesLoading ? (
+            <div className="page-loader" style={{ padding: 18 }}>
+              <span className="spinner" />
+            </div>
+          ) : matches.length === 0 ? (
+            <div
+              className="empty-state"
+              style={{ padding: 18, borderRadius: 16 }}
+            >
+              <div style={{ fontSize: 22, marginBottom: 8 }}>💘</div>
+              <p style={{ margin: 0, color: "var(--ink-soft)" }}>
+                Chưa có ai kết đôi. Hãy đăng tin và tương tác để tăng cơ hội.
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: "grid", gap: 10 }}>
+              {matches.slice(0, 4).map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => openMatchChat(m)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 12,
+                    width: "100%",
+                    padding: "14px 16px",
+                    borderRadius: 16,
+                    background: "var(--surface)",
+                    border: "1px solid var(--border)",
+                    cursor: "pointer",
+                    textAlign: "left",
+                  }}
+                >
+                  <div style={{ position: "relative" }}>
+                    <AvatarImg
+                      src={m.user2_avatar_url}
+                      name={m.user2_username}
+                      size={44}
+                    />
+                    {m.partner_is_online && (
+                      <div
+                        className="online-dot"
+                        style={{ position: "absolute", bottom: 0, right: 0 }}
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontSize: 15,
+                        fontWeight: 700,
+                        marginBottom: 3,
+                      }}
+                    >
+                      {m.user2_username}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: 13,
+                        color: "var(--ink-soft)",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {m.user2_bio || "Nhấn để bắt đầu chat..."}
+                    </div>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: m.partner_is_online
+                        ? "#22c55e"
+                        : "var(--ink-soft)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {m.partner_is_online ? "● Online" : "Offline"}
+                  </span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div ref={postSectionRef}>
+        <CreatePost onPost={(p) => setPosts((prev) => [p, ...prev])} />
+      </div>
 
       {loading ? (
         <div className="page-loader">

@@ -111,7 +111,13 @@ function AppInner() {
           overflow: page === "messages" && chatMatch ? "hidden" : "auto",
         }}
       >
-        {page === "feed" && <FeedPage openUserProfile={openUserProfile} />}
+        {page === "feed" && (
+          <FeedPage
+            openUserProfile={openUserProfile}
+            setPage={handleSetPage}
+            setChatMatch={setChatMatch}
+          />
+        )}
         {page === "match" && (
           <MatchPage
             setPage={handleSetPage}
