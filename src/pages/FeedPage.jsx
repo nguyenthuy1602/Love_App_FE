@@ -9,11 +9,11 @@ import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
 
 const REACTIONS = [
-  { key: "heart", emoji: "❤️" },
+  { key: "like", emoji: "👍" },
+  { key: "love", emoji: "❤️" },
   { key: "haha", emoji: "😂" },
-  { key: "wow", emoji: "😮" },
   { key: "sad", emoji: "😢" },
-  { key: "fire", emoji: "🔥" },
+  { key: "angry", emoji: "😡" },
 ];
 
 const MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024;
@@ -61,6 +61,7 @@ function SentimentBadge({ score }) {
 function ReactionBar({ reactions, postId, onUpdate }) {
   const toast = useToast();
   const [show, setShow] = useState(false);
+  const [bump, setBump] = useState(false);
   const ref = useRef();
 
   useEffect(() => {
@@ -76,9 +77,14 @@ function ReactionBar({ reactions, postId, onUpdate }) {
     0,
   );
   const myReaction = REACTIONS.find((r) => r.key === reactions?.my_reaction);
+  const orderedReactions = REACTIONS.filter((r) => reactions?.[r.key] > 0).sort(
+    (a, b) => reactions[b.key] - reactions[a.key],
+  );
 
   const react = async (type) => {
     setShow(false);
+    setBump(true);
+    setTimeout(() => setBump(false), 180);
     try {
       // POST /api/posts/:id/react  → toggle logic
       const data = await api.post(`/api/posts/${postId}/react`, {
@@ -98,9 +104,14 @@ function ReactionBar({ reactions, postId, onUpdate }) {
         style={{
           color: myReaction ? "var(--rose)" : "var(--ink-soft)",
           fontWeight: myReaction ? 700 : 500,
+          transition: "transform 0.15s ease, color 0.15s ease",
+          transform: bump ? "scale(1.03)" : "scale(1)",
         }}
       >
-        {myReaction ? myReaction.emoji : "🤍"} {total > 0 ? total : ""} React
+        {myReaction ? myReaction.emoji : "🤍"}
+        <span style={{ marginLeft: 6, fontSize: 13 }}>
+          {total > 0 ? `${total} lượt tương tác` : "Tương tác"}
+        </span>
       </button>
       {show && (
         <div
@@ -111,9 +122,9 @@ function ReactionBar({ reactions, postId, onUpdate }) {
             zIndex: 20,
             background: "white",
             borderRadius: 100,
-            padding: "6px 12px",
+            padding: "8px 14px",
             display: "flex",
-            gap: 4,
+            gap: 6,
             boxShadow: "var(--shadow-md)",
             border: "1px solid var(--border)",
             animation: "slideDown 0.15s ease",
@@ -126,22 +137,29 @@ function ReactionBar({ reactions, postId, onUpdate }) {
               title={r.key}
               style={{
                 fontSize: 22,
-                padding: "4px 6px",
-                borderRadius: 8,
-                border: "none",
+                width: 36,
+                height: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 14,
+                border: "1px solid transparent",
                 cursor: "pointer",
                 background:
                   reactions?.my_reaction === r.key
-                    ? "var(--rose-pale)"
+                    ? "rgba(236, 72, 153, 0.12)"
                     : "transparent",
-                transition: "transform 0.1s",
+                transition:
+                  "transform 0.15s ease, background 0.15s ease, border-color 0.15s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.transform = "scale(1.3)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.transform = "scale(1)")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.15)";
+                e.currentTarget.style.borderColor = "var(--rose-pale)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.borderColor = "transparent";
+              }}
             >
               {r.emoji}
             </button>
@@ -300,6 +318,14 @@ function PostCard({ post, onDelete, openUserProfile }) {
   const [showReport, setShowReport] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+
+  const reactionTotal = REACTIONS.reduce(
+    (sum, r) => sum + Number(reactions[r.key] || 0),
+    0,
+  );
+  const topReactions = REACTIONS.filter((r) => reactions[r.key] > 0).sort(
+    (a, b) => reactions[b.key] - reactions[a.key],
+  );
 
   useEffect(() => {
     const h = (e) => {
@@ -489,24 +515,42 @@ function PostCard({ post, onDelete, openUserProfile }) {
         </div>
       )}
 
-      {/* Reaction counts */}
-      {REACTIONS.some((r) => reactions[r.key] > 0) && (
+      {(reactionTotal > 0 || commentCount > 0) && (
         <div
           style={{
-            padding: "8px 20px 0",
+            padding: "0 20px 8px",
             display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            color: "var(--ink-soft)",
+            fontSize: 13,
+            marginTop: 4,
           }}
         >
-          {REACTIONS.filter((r) => reactions[r.key] > 0).map((r) => (
-            <span
-              key={r.key}
-              style={{ fontSize: 13, color: "var(--ink-soft)" }}
-            >
-              {r.emoji} {reactions[r.key]}
-            </span>
-          ))}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            {topReactions.slice(0, 3).map((reaction) => (
+              <span key={reaction.key}>{reaction.emoji}</span>
+            ))}
+            {reactionTotal > 0 ? (
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                }}
+              >
+                <span style={{ color: "var(--rose)" }}>•</span>
+                <span>{reactionTotal} lượt tương tác</span>
+              </span>
+            ) : (
+              <span>Chưa có tương tác</span>
+            )}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <span>💬</span>
+            <span>{commentCount} bình luận</span>
+          </div>
         </div>
       )}
 
