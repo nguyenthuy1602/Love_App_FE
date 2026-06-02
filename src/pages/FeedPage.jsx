@@ -48,10 +48,7 @@ function timeAgo(date) {
 }
 
 function getReactionTotal(reactions) {
-  return REACTIONS.reduce(
-    (sum, r) => sum + Number(reactions?.[r.key] || 0),
-    0,
-  );
+  return REACTIONS.reduce((sum, r) => sum + Number(reactions?.[r.key] || 0), 0);
 }
 
 function SentimentBadge({ score }) {
@@ -904,8 +901,17 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         <h1 style={{ fontSize: 34, color: "var(--rose)", marginBottom: 8 }}>
           Trang chủ
         </h1>
-        <p style={{ color: "var(--ink-soft)", fontSize: 15, maxWidth: 680, lineHeight: 1.8 }}>
-          Đọc tin, chia sẻ cảm xúc và kết nối nhanh với người phù hợp. Aura giúp bạn hiển thị cảm xúc rõ ràng và tương tác theo cách mềm mại, thân thiện.
+        <p
+          style={{
+            color: "var(--ink-soft)",
+            fontSize: 15,
+            maxWidth: 680,
+            lineHeight: 1.8,
+          }}
+        >
+          Đọc tin, chia sẻ cảm xúc và kết nối nhanh với người phù hợp. Aura giúp
+          bạn hiển thị cảm xúc rõ ràng và tương tác theo cách mềm mại, thân
+          thiện.
         </p>
       </div>
 
@@ -922,11 +928,14 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
           style={{
             padding: 18,
             borderRadius: 22,
-            background: "linear-gradient(135deg, var(--rose-pale), var(--cream))",
+            background:
+              "linear-gradient(135deg, var(--rose-pale), var(--cream))",
             border: "1px solid rgba(232, 54, 74, 0.12)",
           }}
         >
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
+          >
             Tổng số bài viết
           </div>
           <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
@@ -935,7 +944,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         </div>
 
         <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
+          >
             Cảm xúc hiện tại
           </div>
           <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
@@ -947,7 +958,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         </div>
 
         <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
+          >
             Bình luận
           </div>
           <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
@@ -959,7 +972,9 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
         </div>
 
         <div className="card" style={{ padding: 18, borderRadius: 22 }}>
-          <div style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}>
+          <div
+            style={{ fontSize: 13, color: "var(--ink-soft)", marginBottom: 8 }}
+          >
             Bạn bè online
           </div>
           <div style={{ fontSize: 28, fontWeight: 700, color: "var(--rose)" }}>
