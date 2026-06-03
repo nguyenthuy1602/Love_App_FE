@@ -127,13 +127,17 @@ function ReactionBar({ reactions, postId, onUpdate }) {
         reaction_type: type,
       });
       console.debug("ReactionBar: server response ->", data);
-      // server should return ReactionCountResponse with keys heart/sad/wow/haha/fire/my_reaction
-      if (
+
+      const hasReactionKeys =
         data &&
         typeof data === "object" &&
-        ("heart" in data || "post_id" in data)
-      ) {
-        // prefer using only the reaction keys
+        ("heart" in data ||
+          "sad" in data ||
+          "wow" in data ||
+          "haha" in data ||
+          "fire" in data);
+
+      if (hasReactionKeys) {
         const sanitized = {
           heart: Number(data.heart || 0),
           sad: Number(data.sad || 0),
@@ -142,7 +146,24 @@ function ReactionBar({ reactions, postId, onUpdate }) {
           fire: Number(data.fire || 0),
           my_reaction: data.my_reaction || null,
         };
-        onUpdate(sanitized);
+
+        const serverSum =
+          sanitized.heart +
+          sanitized.sad +
+          sanitized.wow +
+          sanitized.haha +
+          sanitized.fire;
+        const optimisticSum = REACTIONS.reduce(
+          (s, r) => s + Number(optimistic[r.key] || 0),
+          0,
+        );
+
+        if (serverSum === 0 && optimisticSum > 0) {
+          const fresh = await api.get(`/api/posts/${postId}/reactions`);
+          onUpdate(fresh);
+        } else {
+          onUpdate(sanitized);
+        }
       } else {
         // unexpected response; refresh authoritative counts
         const fresh = await api.get(`/api/posts/${postId}/reactions`);
@@ -150,12 +171,10 @@ function ReactionBar({ reactions, postId, onUpdate }) {
       }
     } catch (err) {
       toast(err.message || "Lỗi khi gửi reaction", "error");
-      // fetch authoritative counts to revert/refresh
       try {
         const fresh = await api.get(`/api/posts/${postId}/reactions`);
         onUpdate(fresh);
       } catch (e) {
-        // if even refresh fails, revert to previous state
         onUpdate(prev);
       }
     }
@@ -384,14 +403,6 @@ function PostCard({ post, onDelete, openUserProfile }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
 
-  const reactionTotal = Math.max(
-    0,
-    REACTIONS.reduce((sum, r) => sum + Number(reactions[r.key] || 0), 0),
-  );
-  const topReactions = REACTIONS.filter((r) => reactions[r.key] > 0).sort(
-    (a, b) => reactions[b.key] - reactions[a.key],
-  );
-
   useEffect(() => {
     const h = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target))
@@ -591,17 +602,8 @@ function PostCard({ post, onDelete, openUserProfile }) {
         </div>
       )}
 
-      {(reactionTotal > 0 || commentCount > 0) && (
+      {commentCount > 0 && (
         <div className="post-actions">
-          <div className="reaction-pill">
-            {topReactions.slice(0, 3).map((reaction) => (
-              <span key={reaction.key}>{reaction.emoji}</span>
-            ))}
-            <span>
-              <span>💖</span>
-              <span>{reactionTotal} cảm xúc</span>
-            </span>
-          </div>
           <div className="comment-pill">
             <span>💬</span>
             <span>{commentCount} bình luận</span>
