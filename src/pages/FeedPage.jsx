@@ -66,6 +66,13 @@ function sanitizeReactionCounts(data) {
   };
 }
 
+function sanitizePost(post) {
+  return {
+    ...post,
+    reactions: sanitizeReactionCounts(post.reactions || {}),
+  };
+}
+
 function SentimentBadge({ score }) {
   if (!score) return null;
   const map = {
@@ -399,13 +406,19 @@ function CommentSection({ postId, onCountChange }) {
 function PostCard({ post, onDelete, openUserProfile }) {
   const { user } = useAuth();
   const toast = useToast();
-  const [reactions, setReactions] = useState(post.reactions || {});
+  const [reactions, setReactions] = useState(
+    sanitizeReactionCounts(post.reactions || {}),
+  );
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(post.comment_count || 0);
   const [deleting, setDeleting] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
+
+  useEffect(() => {
+    setReactions(sanitizeReactionCounts(post.reactions || {}));
+  }, [post.reactions]);
 
   useEffect(() => {
     const h = (e) => {
@@ -745,7 +758,7 @@ function CreatePost({ onPost }) {
       const post = await api.post("/api/posts", payload);
 
       console.info("[create-post] create response", post);
-      onPost(post);
+      onPost(sanitizePost(post));
       setContent("");
       setMediaUrl(null);
       setMediaType(null);
@@ -967,6 +980,24 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
           Khám phá câu chuyện của mọi người và chia sẻ cảm xúc của bạn ngay hôm
           nay.
         </p>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 12,
+            marginTop: 14,
+          }}
+        >
+          <div className="stat-pill">
+            🔥 <strong>{totalReactions}</strong> lượt tương tác
+          </div>
+          <div className="stat-pill">
+            💬 <strong>{totalComments}</strong> bình luận
+          </div>
+          <div className="stat-pill">
+            💌 <strong>{activeMatches}</strong> đang online
+          </div>
+        </div>
       </div>
 
       <div className="stories-row">
