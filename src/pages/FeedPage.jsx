@@ -55,6 +55,17 @@ function getReactionTotal(reactions) {
   return Math.max(0, sum);
 }
 
+function sanitizeReactionCounts(data) {
+  return {
+    heart: Math.max(0, Number(data?.heart ?? 0)),
+    sad: Math.max(0, Number(data?.sad ?? 0)),
+    wow: Math.max(0, Number(data?.wow ?? 0)),
+    haha: Math.max(0, Number(data?.haha ?? 0)),
+    fire: Math.max(0, Number(data?.fire ?? 0)),
+    my_reaction: data?.my_reaction || null,
+  };
+}
+
 function SentimentBadge({ score }) {
   if (!score) return null;
   const map = {
@@ -138,14 +149,7 @@ function ReactionBar({ reactions, postId, onUpdate }) {
           "fire" in data);
 
       if (hasReactionKeys) {
-        const sanitized = {
-          heart: Number(data.heart || 0),
-          sad: Number(data.sad || 0),
-          wow: Number(data.wow || 0),
-          haha: Number(data.haha || 0),
-          fire: Number(data.fire || 0),
-          my_reaction: data.my_reaction || null,
-        };
+        const sanitized = sanitizeReactionCounts(data);
 
         const serverSum =
           sanitized.heart +
@@ -160,20 +164,20 @@ function ReactionBar({ reactions, postId, onUpdate }) {
 
         if (serverSum === 0 && optimisticSum > 0) {
           const fresh = await api.get(`/api/posts/${postId}/reactions`);
-          onUpdate(fresh);
+          onUpdate(sanitizeReactionCounts(fresh));
         } else {
           onUpdate(sanitized);
         }
       } else {
         // unexpected response; refresh authoritative counts
         const fresh = await api.get(`/api/posts/${postId}/reactions`);
-        onUpdate(fresh);
+        onUpdate(sanitizeReactionCounts(fresh));
       }
     } catch (err) {
       toast(err.message || "Lỗi khi gửi reaction", "error");
       try {
         const fresh = await api.get(`/api/posts/${postId}/reactions`);
-        onUpdate(fresh);
+        onUpdate(sanitizeReactionCounts(fresh));
       } catch (e) {
         onUpdate(prev);
       }
