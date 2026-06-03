@@ -980,24 +980,6 @@ export function FeedPage({ openUserProfile, setPage, setChatMatch }) {
           Khám phá câu chuyện của mọi người và chia sẻ cảm xúc của bạn ngay hôm
           nay.
         </p>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 12,
-            marginTop: 14,
-          }}
-        >
-          <div className="stat-pill">
-            🔥 <strong>{totalReactions}</strong> lượt tương tác
-          </div>
-          <div className="stat-pill">
-            💬 <strong>{totalComments}</strong> bình luận
-          </div>
-          <div className="stat-pill">
-            💌 <strong>{activeMatches}</strong> đang online
-          </div>
-        </div>
       </div>
 
       <div className="stories-row">
