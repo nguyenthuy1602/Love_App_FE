@@ -48,7 +48,11 @@ function timeAgo(date) {
 }
 
 function getReactionTotal(reactions) {
-  return REACTIONS.reduce((sum, r) => sum + Number(reactions?.[r.key] || 0), 0);
+  const sum = REACTIONS.reduce(
+    (sum, r) => sum + Number(reactions?.[r.key] || 0),
+    0,
+  );
+  return Math.max(0, sum);
 }
 
 function SentimentBadge({ score }) {
@@ -76,9 +80,9 @@ function ReactionBar({ reactions, postId, onUpdate }) {
     return () => document.removeEventListener("mousedown", h);
   }, []);
 
-  const total = REACTIONS.reduce(
-    (s, r) => s + Number(reactions?.[r.key] || 0),
+  const total = Math.max(
     0,
+    REACTIONS.reduce((s, r) => s + Number(reactions?.[r.key] || 0), 0),
   );
   const myReaction = REACTIONS.find((r) => r.key === reactions?.my_reaction);
   const orderedReactions = REACTIONS.filter((r) => reactions?.[r.key] > 0).sort(
@@ -323,9 +327,9 @@ function PostCard({ post, onDelete, openUserProfile }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef();
 
-  const reactionTotal = REACTIONS.reduce(
-    (sum, r) => sum + Number(reactions[r.key] || 0),
+  const reactionTotal = Math.max(
     0,
+    REACTIONS.reduce((sum, r) => sum + Number(reactions[r.key] || 0), 0),
   );
   const topReactions = REACTIONS.filter((r) => reactions[r.key] > 0).sort(
     (a, b) => reactions[b.key] - reactions[a.key],

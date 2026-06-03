@@ -1067,35 +1067,7 @@ function MyProfile() {
                       </p>
                     </div>
                   )}
-                  {/* Overlay with reactions count */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      background: "rgba(0, 0, 0, 0.5)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      opacity: 0,
-                      transition: "opacity 150ms ease",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.opacity = "1";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.opacity = "0";
-                    }}
-                  >
-                    <div style={{ textAlign: "center", color: "#fff" }}>
-                      <div style={{ fontSize: 20 }}>❤️</div>
-                      <div style={{ fontSize: 12, marginTop: 4 }}>
-                        {post.reactions_count || 0}
-                      </div>
-                    </div>
-                  </div>
+                  {/* overlay removed: reaction count now shown on post card actions */}
                 </div>
               ))}
             </div>

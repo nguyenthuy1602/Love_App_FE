@@ -61,7 +61,11 @@ function ChatWindow({ match, onBack }) {
   const [nextCursor, setNextCursor] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [wsReady, setWsReady] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("Đang kết nối...");
+  const [retrying, setRetrying] = useState(false);
   const wsRef = useRef(null);
+  const reconnectRef = useRef(null);
+  const pendingRef = useRef([]);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
   const scrolledToBottom = useRef(false);
@@ -72,11 +76,27 @@ function ChatWindow({ match, onBack }) {
 
   useEffect(() => {
     scrolledToBottom.current = false;
+    setWsReady(false);
+    setStatusMessage("Đang kết nối...");
+    setRetrying(false);
+
     const ws = new WebSocket(`${WS_BASE}/chat/ws/${match.id}`);
     wsRef.current = ws;
     let historyTimeout = null;
     let historyReceived = false;
-    ws.onopen = () => setWsReady(true);
+    ws.onopen = () => {
+      setWsReady(true);
+      setStatusMessage("Đã kết nối");
+      // flush pending messages queued while offline
+      try {
+        if (pendingRef.current && pendingRef.current.length) {
+          pendingRef.current.forEach((p) => ws.send(JSON.stringify(p)));
+          pendingRef.current = [];
+        }
+      } catch (e) {
+        console.warn("Failed to flush pending messages", e);
+      }
+    };
 
     ws.onmessage = (e) => {
       let data;
@@ -119,15 +139,25 @@ function ChatWindow({ match, onBack }) {
 
     ws.onclose = (e) => {
       setWsReady(false);
+      setRetrying(true);
+      setStatusMessage("Kết nối thất bại, đang thử lại...");
       const msgs = {
         4001: "Chưa đăng nhập",
         4003: "Không có quyền vào phòng",
         4004: "Phòng đã đủ 2 người",
       };
       if (msgs[e.code]) toast(msgs[e.code], "error");
+      reconnectRef.current = window.setTimeout(() => {
+        setRetrying(false);
+        setStatusMessage("Đang kết nối lại...");
+      }, 1500);
     };
 
-    ws.onerror = () => ws.close();
+    ws.onerror = () => {
+      setWsReady(false);
+      setStatusMessage("Lỗi kết nối chat");
+      ws.close();
+    };
 
     inputRef.current?.focus();
     // If server doesn't send 'history' (e.g., transient WS issue), fetch via REST as fallback
@@ -180,12 +210,7 @@ function ChatWindow({ match, onBack }) {
 
   const sendMsg = (e) => {
     e.preventDefault();
-    if (
-      !text.trim() ||
-      !wsRef.current ||
-      wsRef.current.readyState !== WebSocket.OPEN
-    )
-      return;
+    if (!text.trim()) return;
     if (text.length > 500) {
       toast("Tin nhắn quá dài (tối đa 500 ký tự)", "error");
       return;
@@ -194,7 +219,17 @@ function ChatWindow({ match, onBack }) {
     try {
       console.debug("WS:send ->", payload);
     } catch (e) {}
-    wsRef.current.send(JSON.stringify(payload));
+
+    const ws = wsRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(payload));
+    } else {
+      // Queue the message and notify user; will be flushed when WS reopens
+      pendingRef.current = pendingRef.current || [];
+      pendingRef.current.push(payload);
+      toast("Tin nhắn đã lưu, sẽ gửi khi kết nối được thiết lập", "info");
+    }
+
     setText("");
   };
 
@@ -392,12 +427,11 @@ function ChatWindow({ match, onBack }) {
           onChange={(e) => setText(e.target.value)}
           maxLength={500}
           style={{ flex: 1 }}
-          disabled={!wsReady}
         />
         <button
           type="submit"
           className="btn btn-primary"
-          disabled={!text.trim() || !wsReady}
+          disabled={!text.trim()}
           style={{
             width: 44,
             height: 44,
