@@ -93,14 +93,71 @@ function ReactionBar({ reactions, postId, onUpdate }) {
     setShow(false);
     setBump(true);
     setTimeout(() => setBump(false), 180);
+    // Optimistic UI update: compute expected reactions state immediately
+    const prev = { ...(reactions || {}) };
+    const myReactionKey = prev?.my_reaction || null;
+    const optimistic = { ...prev };
+
+    // ensure numeric counts
+    REACTIONS.forEach((r) => {
+      optimistic[r.key] = Number(optimistic[r.key] || 0);
+    });
+
+    if (myReactionKey === type) {
+      // toggle off
+      optimistic[type] = Math.max(0, optimistic[type] - 1);
+      optimistic.my_reaction = null;
+    } else {
+      if (myReactionKey)
+        optimistic[myReactionKey] = Math.max(0, optimistic[myReactionKey] - 1);
+      optimistic[type] = (optimistic[type] || 0) + 1;
+      optimistic.my_reaction = type;
+    }
+
+    // apply optimistic update
     try {
-      // POST /api/posts/:id/react  → toggle logic
+      onUpdate(optimistic);
+    } catch (e) {
+      // in case parent setter throws
+    }
+
+    try {
+      console.debug("ReactionBar: optimistic ->", optimistic);
       const data = await api.post(`/api/posts/${postId}/react`, {
         reaction_type: type,
       });
-      onUpdate(data);
+      console.debug("ReactionBar: server response ->", data);
+      // server should return ReactionCountResponse with keys heart/sad/wow/haha/fire/my_reaction
+      if (
+        data &&
+        typeof data === "object" &&
+        ("heart" in data || "post_id" in data)
+      ) {
+        // prefer using only the reaction keys
+        const sanitized = {
+          heart: Number(data.heart || 0),
+          sad: Number(data.sad || 0),
+          wow: Number(data.wow || 0),
+          haha: Number(data.haha || 0),
+          fire: Number(data.fire || 0),
+          my_reaction: data.my_reaction || null,
+        };
+        onUpdate(sanitized);
+      } else {
+        // unexpected response; refresh authoritative counts
+        const fresh = await api.get(`/api/posts/${postId}/reactions`);
+        onUpdate(fresh);
+      }
     } catch (err) {
-      toast(err.message, "error");
+      toast(err.message || "Lỗi khi gửi reaction", "error");
+      // fetch authoritative counts to revert/refresh
+      try {
+        const fresh = await api.get(`/api/posts/${postId}/reactions`);
+        onUpdate(fresh);
+      } catch (e) {
+        // if even refresh fails, revert to previous state
+        onUpdate(prev);
+      }
     }
   };
 
